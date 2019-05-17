@@ -1,10 +1,10 @@
 {
-  "name": "reactboilerplate",
+  "name": "mobiauto",
   "version": "1.0.0",
   "description": "React, Redux, Jest, Hook, Styled Components, WebPack, Lint, Prettier",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dashboard -t reactboilerplate -- webpack-dev-server --open --mode development",
+    "start": "webpack-dashboard -t mobiauto -- webpack-dev-server --hot --open --mode development",
     "build": "webpack --mode production",
     "format": "prettier --write \"src/**/*.js\"",
     "eslint-fix": "eslint --fix \"src/**/*.js\"",
@@ -17,10 +17,13 @@
   "mobile-phone": "+55 (11) 9 4262-0998",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-loader-spinner": "^2.3.0",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
+    "react-select": "^2.4.3",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "styled-components": "^4.2.0"

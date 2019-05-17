@@ -6,8 +6,8 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configureStore from './store';
 
-import Home from '@pages/home';
-import User from '@pages/user';
+import Home from '@pages/Home';
+import Options from '@pages/Options';
 import './assets/styles/main.css';
 
 const store = configureStore();
@@ -20,7 +20,7 @@ class App extends Component {
         <Router history={history}>
           <Switch>
             <Route path="/" exact component={Home} />
-            <Route path="/user" exact component={User} />
+            <Route path="/options" exact component={Options} />
           </Switch>
         </Router>
       </Provider>

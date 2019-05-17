@@ -10,4 +10,8 @@ export const Container = styled.div`
     flex-direction: column;
     text-align: center;
   }
+
+  .title {
+    margin-bottom: 20px;
+  }
 `;

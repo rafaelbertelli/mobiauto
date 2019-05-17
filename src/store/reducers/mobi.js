@@ -1,16 +1,11 @@
-const INITIAL_STATE = { loading: false };
+const INITIAL_STATE = {};
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'mobi/LOADING':
+    case 'mobi/BRANDS':
       return {
         ...state,
-        loading: action.param,
-      };
-
-    case 'mobi/BOOTSTRAP':
-      return {
-        ...state,
+        brands: action.payload,
       };
 
     default:
