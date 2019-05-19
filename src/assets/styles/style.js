@@ -11,7 +11,12 @@ export const Container = styled.div`
     text-align: center;
   }
 
-  .title {
+  .default-mb {
     margin-bottom: 20px;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
   }
 `;

@@ -10,6 +10,6 @@ if (process.env.NODE_ENV === `development`) {
   middlewares.push(logger);
 }
 
-export default function configureStore(initialState = {}) {
-  return createStore(rootReducer, initialState, applyMiddleware(...middlewares));
+export default function configureStore() {
+  return createStore(rootReducer, applyMiddleware(...middlewares));
 }

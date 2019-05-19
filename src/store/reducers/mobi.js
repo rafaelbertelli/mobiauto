@@ -1,4 +1,13 @@
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+  brands: [],
+  models: [],
+  years: [],
+  price: {},
+  selectedBrand: {},
+  selectedModel: {},
+  selectedYear: {},
+  selectedPrice: {},
+};
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -6,6 +15,18 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         brands: action.payload,
+      };
+
+    case 'mobi/SELECTEDBRAND':
+      return {
+        ...state,
+        selectedBrand: action.payload,
+      };
+
+    case 'mobi/MODELS':
+      return {
+        ...state,
+        models: action.payload,
       };
 
     default:

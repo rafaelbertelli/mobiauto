@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loading, getCarBrandsAction } from '@store/actions/mobi';
+import { getCarBrandsAction } from '@store/actions/mobi';
 import LoaderComponent from '@components/Loader';
 
 import { Container } from '@styles/style';
@@ -13,16 +13,16 @@ class Home extends Component {
     loading: false,
   };
 
-  componentDidMount() {
-    console.log(this.props.brands);
-  }
-
   handleClick = () => {
     this.setState({ loading: true });
 
     this.props
       .getCarBrandsAction()
-      .then(() => this.setState({ redirect: true }))
+      .then(() => {
+        console.log('***********', this.props.brands);
+
+        this.setState({ redirect: true });
+      })
       .catch(err => {
         this.setState({ loading: false });
         alert('Algo estranho aconteceu');
@@ -37,7 +37,7 @@ class Home extends Component {
     ) : (
       <Container>
         <div className="wrapper">
-          <h1 className="title">Bora começar?!</h1>
+          <h1 className="default-mb">Bora começar?!</h1>
 
           {loading ? (
             <LoaderComponent type="CradleLoader" />
@@ -51,7 +51,6 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  loading: PropTypes.func,
   getCarBrandsAction: PropTypes.func,
   brands: PropTypes.arrayOf(PropTypes.object),
 };
@@ -61,7 +60,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loading: params => dispatch(loading(params)),
   getCarBrandsAction: () => dispatch(getCarBrandsAction()),
 });
 
