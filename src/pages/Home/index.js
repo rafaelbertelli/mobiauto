@@ -18,11 +18,7 @@ class Home extends Component {
 
     this.props
       .getCarBrandsAction()
-      .then(() => {
-        console.log('***********', this.props.brands);
-
-        this.setState({ redirect: true });
-      })
+      .then(() => this.setState({ redirect: true }))
       .catch(err => {
         this.setState({ loading: false });
         alert('Algo estranho aconteceu');

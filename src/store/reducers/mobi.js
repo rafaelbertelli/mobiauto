@@ -2,11 +2,10 @@ const INITIAL_STATE = {
   brands: [],
   models: [],
   years: [],
-  price: {},
+  value: {},
   selectedBrand: {},
   selectedModel: {},
   selectedYear: {},
-  selectedPrice: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -27,6 +26,30 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         models: action.payload,
+      };
+
+    case 'mobi/SELECTEDMODEL':
+      return {
+        ...state,
+        selectedModel: action.payload,
+      };
+
+    case 'mobi/YEARS':
+      return {
+        ...state,
+        years: action.payload,
+      };
+
+    case 'mobi/SELECTEDYEAR':
+      return {
+        ...state,
+        selectedYear: action.payload,
+      };
+
+    case 'mobi/VALUE':
+      return {
+        ...state,
+        value: action.payload,
       };
 
     default:
