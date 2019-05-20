@@ -9,124 +9,116 @@ import { storeSelectedBrand, getCarModels } from '@actions/mobi';
 
 import { Container } from '@styles/style';
 
-const QUESTIONS = {
-  1: 'Selecione a marca do carro',
-  2: 'Selecione o modelo do carro',
-};
+const Options = props => {
+  const [level, setLevel] = useState(1);
+  // const [nextLevel, setNextLevel] = useState(1)
+  const [redirect, setRedirect] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState([]);
 
-class Options extends React.Component {
-  state = {
-    level: 1,
-    redirect: false,
-    selectedValue: null,
-    isLoading: false,
-    options: this.props.brands,
+  const GLOSARY = {
+    1: {
+      QUESTION: 'Selecione a marca do carro',
+      SET_OPTIONS: () => setOptions(props.brands),
+    },
+    2: {
+      QUESTION: 'Selecione o modelo do carro',
+      SET_OPTIONS: () => setOptions(props.models),
+    },
   };
 
-  handleReset = () => this.setState({ redirect: true });
+  const handleReset = () => setRedirect(true);
 
-  handleSelect = selectedOption => {
-    console.log('handle select', this.state.level);
+  const handleSelect = selectedOption => {
+    console.log('handle select', level);
 
-    this.props
+    props
       .storeSelectedBrand(selectedOption)
       .then(res => {
-        console.log('}}}}}}}}}}}}}}}}}}}}}}}', this.props.selectedBrand);
-        this.setState({
-          selectedValue: res,
-        });
+        setSelectedValue(res);
       })
-      .catch(err => alert(err))
-      .finally(() => console.log('´´´´´´´´´´´´´´´´´', this.props.selectedBrand));
+      .catch(alert);
 
     /**
      * de acordo com cada nivel de acao, chamar uma action
      */
   };
 
-  handleNext = e => {
+  const handleNext = e => {
     /**
      * verificar aqui qual é o nível de ação e disparar um a atualização da store
      */
 
-    const prevLevel = this.state.level;
-    const nextLevel = this.state.level + 1;
+    const prevLevel = level;
+    const nextLevel = level + 1;
 
-    const limitLevel = Object.keys(QUESTIONS).length;
+    const limitLevel = Object.keys(GLOSARY).length;
 
     if (nextLevel > limitLevel) {
       return console.log('~~~~~~~', 'mostrar a tela de conclusao');
     }
 
-    this.setState({ isLoading: true });
+    setIsLoading(true);
 
-    this.props
+    props
       .getCarModels()
       .then(res => {
-        /**
-         * O problema está aqui
-         * Eu deveria já ter acesso à store, no entanto, neste momento,
-         * a props.models está pegando o estado anterior
-         */
         console.log(
           '============ TEM QUE VIR OS MODELOS DE CARROS ==============',
-          this.props.mobi,
-          this.props.models,
+          props.mobi,
+          props.models,
           res
         );
 
-        debugger;
-
-        this.setState({
-          isLoading: false,
-          options: this.props.models,
-          level: nextLevel,
-        });
+        setLevel(nextLevel);
+        setIsLoading(false);
+        setSelectedValue(null);
       })
       .catch(err => {
         debugger;
       });
   };
 
-  componentDidMount() {
-    console.log('EFEITO', this.state.level, this.props.selectedBrand, this.props.mobi);
-    if (!this.props.mobi.brands.length) {
-      return this.props.history.push('/');
+  useEffect(() => {
+    console.log('EFEITO', level, props.selectedBrand, props.mobi);
+    if (!props.mobi.brands.length) {
+      return props.history.push('/');
     }
-  }
 
-  render() {
-    return this.state.redirect ? (
-      <Redirect to="/" />
-    ) : (
-      <Container>
-        <div className="wrapper">
-          <h1 className="default-mb">{QUESTIONS[this.state.level]}</h1>
+    GLOSARY[level].SET_OPTIONS();
+  });
 
-          <form onSubmit={e => e.preventDefault()}>
-            <Select
-              className="default-mb"
-              value={this.state.selectedValue}
-              onChange={this.handleSelect}
-              options={this.state.options}
-            />
+  return redirect ? (
+    <Redirect to="/" />
+  ) : (
+    <Container>
+      <div className="wrapper">
+        <h1 className="default-mb">{GLOSARY[level].QUESTION}</h1>
 
-            {this.state.isLoading ? (
-              <LoaderComponent type="CradleLoader" />
-            ) : (
-              <div className="buttons">
-                <button onClick={this.handleReset}>Reset</button>
-                <button type="submit" onClick={this.handleNext}>
-                  Próxima
-                </button>
-              </div>
-            )}
-          </form>
-        </div>
-      </Container>
-    );
-  }
-}
+        <form onSubmit={e => e.preventDefault()}>
+          <Select
+            className="default-mb"
+            value={selectedValue}
+            onChange={handleSelect}
+            options={options}
+          />
+
+          {isLoading ? (
+            <LoaderComponent type="CradleLoader" />
+          ) : (
+            <div className="buttons">
+              <button onClick={handleReset}>Reset</button>
+              <button type="submit" onClick={handleNext}>
+                Próxima
+              </button>
+            </div>
+          )}
+        </form>
+      </div>
+    </Container>
+  );
+};
 
 Options.propTypes = {
   history: PropTypes.object,
