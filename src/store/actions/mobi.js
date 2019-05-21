@@ -83,8 +83,6 @@ export const getValue = () => (dispatch, getState) => {
   const modelId = store.mobi.selectedModel.value;
   const yearId = store.mobi.selectedYear.value;
 
-  debugger;
-
   return getValueService({ brandId, modelId, yearId })
     .then(payload => {
       dispatch({

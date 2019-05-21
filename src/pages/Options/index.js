@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -21,7 +21,7 @@ const Options = props => {
   const [redirect, setRedirect] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [presentation, setPresentation] = useState(false);
+  const [isInterview, setIsInterview] = useState(true);
   const [options, setOptions] = useState([]);
 
   const GLOSARY = {
@@ -51,25 +51,30 @@ const Options = props => {
 
   const handleReset = () => setRedirect(true);
 
+  const handleError = ({ message }) => {
+    alert(message);
+    setIsLoading(false);
+  };
+
   const handleSelect = selectedOption => GLOSARY[level].STORE_SELECTED(selectedOption);
 
   const storeBrand = selectedOption =>
     props
       .storeSelectedBrand(selectedOption)
       .then(setSelectedValue)
-      .catch(alert);
+      .catch(handleError);
 
   const storeModel = selectedOption =>
     props
       .storeSelectedModel(selectedOption)
       .then(setSelectedValue)
-      .catch(alert);
+      .catch(handleError);
 
   const storeYear = selectedOption =>
     props
       .storeSelectedYear(selectedOption)
       .then(setSelectedValue)
-      .catch(alert);
+      .catch(handleError);
 
   const handleNext = e => {
     setIsLoading(true);
@@ -84,7 +89,7 @@ const Options = props => {
         setIsLoading(false);
         setSelectedValue(null);
       })
-      .catch(alert);
+      .catch(handleError);
 
   const callGetYears = level =>
     props
@@ -94,7 +99,7 @@ const Options = props => {
         setIsLoading(false);
         setSelectedValue(null);
       })
-      .catch(alert);
+      .catch(handleError);
 
   const callGetValue = level =>
     props
@@ -104,11 +109,11 @@ const Options = props => {
         setIsLoading(false);
         setSelectedValue(null);
       })
-      .catch(alert);
+      .catch(handleError);
 
   const presentValue = () => {
     console.log(props.value);
-    setPresentation(true);
+    setIsInterview(false);
   };
 
   useEffect(() => {
@@ -124,33 +129,52 @@ const Options = props => {
   ) : (
     <Container>
       <div className="wrapper">
-        <h1 className="default-mb">{GLOSARY[level].QUESTION}</h1>
+        {isInterview && (
+          <Fragment>
+            <h1 className="default-mb">{GLOSARY[level].QUESTION}</h1>
+            <form onSubmit={e => e.preventDefault()}>
+              <Select
+                className="default-mb"
+                value={selectedValue}
+                onChange={handleSelect}
+                options={options}
+              />
 
-        <form onSubmit={e => e.preventDefault()}>
-          {!presentation && (
-            <Select
-              className="default-mb"
-              value={selectedValue}
-              onChange={handleSelect}
-              options={options}
-            />
-          )}
+              {isLoading && <LoaderComponent type="CradleLoader" />}
 
-          {isLoading && <LoaderComponent type="CradleLoader" />}
+              {!isLoading && (
+                <div className="buttons">
+                  <button onClick={handleReset}>Reset</button>
+                  <button type="submit" onClick={handleNext}>
+                    Próxima
+                  </button>
+                </div>
+              )}
+            </form>
+          </Fragment>
+        )}
 
-          {!isLoading && !presentation && (
+        {!isInterview && (
+          <Fragment>
+            <h1 className="default-mb">Veja os dados do veículo selecionado</h1>
+
+            <div>
+              <p>Marca: {props.value.Marca}</p>
+              <p>Modelo: {props.value.Modelo}</p>
+              <p>Ano/Modelo: {props.value.AnoModelo}</p>
+              <p>Combustível {props.value.Combustivel}</p>
+              <p>
+                Valor: {props.value.Valor}{' '}
+                <span style={{ fontSize: 10 }}>
+                  (mês de referência: {props.value.MesReferencia})
+                </span>
+              </p>
+            </div>
             <div className="buttons">
               <button onClick={handleReset}>Reset</button>
-              <button type="submit" onClick={handleNext}>
-                Próxima
-              </button>
             </div>
-          )}
-
-          {!isLoading && presentation && (
-            <div className="buttons">{JSON.stringify(props.value)}</div>
-          )}
-        </form>
+          </Fragment>
+        )}
       </div>
     </Container>
   );

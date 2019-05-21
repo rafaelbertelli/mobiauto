@@ -33,13 +33,9 @@ class Home extends Component {
     ) : (
       <Container>
         <div className="wrapper">
-          <h1 className="default-mb">Bora começar?!</h1>
-
-          {loading ? (
-            <LoaderComponent type="CradleLoader" />
-          ) : (
-            <button onClick={this.handleClick}>Bora lá...</button>
-          )}
+          <h1 className="default-mb">Consulte aqui os dados da tabela FIPE</h1>
+          {loading && <LoaderComponent type="CradleLoader" />}
+          {!loading && <button onClick={this.handleClick}>Começar...</button>}
         </div>
       </Container>
     );
@@ -55,9 +51,9 @@ const mapStateToProps = state => ({
   brands: state.mobi.brands,
 });
 
-const mapDispatchToProps = dispatch => ({
-  getCarBrandsAction: () => dispatch(getCarBrandsAction()),
-});
+const mapDispatchToProps = {
+  getCarBrandsAction,
+};
 
 export default connect(
   mapStateToProps,
